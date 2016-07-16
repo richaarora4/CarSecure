@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../lib/dec/json/Navigation.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+</head>
+
+<body>
+
+<script>
+
+function decCallback(value) {
+	console.log("Inside DEC Callback :::: ", value);
+	
+	if(value instanceof DecError) {
+		console.log("ErrorCode ::: " , value.getErrorCode());
+		console.log("ErrorMessage ::: " , value.getErrorMessage());
+	} else if(value instanceof DecSuccess) {
+		console.log("SuccessCode ::: " , value.getSuccessCode());
+		console.log("SuccessMessage ::: " , value.getSuccessMessage());
+
+		subscribeNav();
+		subscribePois();
+	}
+};
+
+function clearStorage() {
+	localStorage.clear();
+}
+
+function callbackPois(value) {
+	console.log("inside callback function::::::::", value);
+}
+
+function callbackPoisWithOptionsType(value) {
+	console.log("inside callbackPoisWithOptions Type function::::::::", value);
+
+	if(value instanceof Array) {
+		for (var counter = 0; counter < value.length; counter++) {
+			console.log("Array Item " + counter, value[counter]);
+		}
+	}
+}
+
+function callbackPoisWithOptionsID1(value) {
+	console.log("inside callbackPoisWithOptions ID 1 function::::::::", value);
+
+	if(value instanceof Array) {
+		for (var counter = 0; counter < value.length; counter++) {
+			console.log("Array Item " + counter, value[counter]);
+		}
+	}
+}
+
+function callbackPoisWithOptionsID2(value) {
+	console.log("inside callbackPoisWithOptions ID 2 function::::::::", value);
+
+	if(value instanceof Array) {
+		for (var counter = 0; counter < value.length; counter++) {
+			console.log("Array Item " + counter, value[counter]);
+		}
+	}
+}
+
+function callbackPosition(value) {
+	console.log("inside callbackPosition function::::::::", value);
+}
+
+function callbackDest(value) {
+	console.log("inside callbackDest function::::::::", value);
+}
+
+function resolve(res) {
+   console.log("RESOLVE", res);
+}
+
+function reject(error) {
+   console.log(error);
+}
+	
+function subscribePois() {
+	//drive.navigation.pois.subscribe(callbackPois);
+	drive.navigation.pois.subscribe(callbackPoisWithOptionsType, {"type" : "parking"});
+	drive.navigation.pois.subscribe(callbackPoisWithOptionsID1, {"id" : "myPOI1"});
+	drive.navigation.pois.subscribe(callbackPoisWithOptionsID2, {"id" : "myPOI2"});
+}
+
+function subscribeNav() {
+	drive.navigation.position.subscribe(callbackPosition);
+	drive.navigation.destination.subscribe(callbackDest);
+}
+
+//clearStorage();
+init("sample", decCallback, ["navigation"]);
+
+</script>
+
+
+</body>
+</html>

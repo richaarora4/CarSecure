@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../../../lib/dec/json/Alertmanager.json"></script>
+<script type="text/javascript" src="../../../lib/dec/json/Calendar.json"></script>
+<script type="text/javascript" src="../../../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../../../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../../../lib/dec/js/minified/DECSdk.min.js"></script>
+
+<style type="text/css">
+#getForm {
+		position:absolute;
+		top: 30px;
+		left: 100px;
+	}
+
+#createForm {
+		position:absolute;
+		top: 30px;
+		left: 460px;
+	}
+	
+#cancelForm {
+		position:absolute;
+		top: 30px;
+		left: 870px;
+	}
+</style>
+
+</head>
+
+<body>
+
+<form id="getForm" method="post">
+	<fieldset>
+		<legend><font color="blue" size="4"><b>Get Availability</b></font></legend>
+		<fieldset>
+			<legend><font color="blue" size="3">Select Service Codes</font></legend>
+			<p>
+		    <input type="checkbox" name="serviceCodes" value="vic_oil_change" /> <font size="4"> vic_oil_change </font><br />
+		    <input type="checkbox" name="serviceCodes" value="vic_tire_rotation" /> <font size="4"> vic_tire_rotation </font><br />
+		    <input type="checkbox" name="serviceCodes" value="vic_wheel_alignment" /> <font size="4"> vic_wheel_alignment </font><br />
+		    <input type="checkbox" name="serviceCodes" value="vic_replace_fluids" /><font size="4"> vic_replace_fluids </font><br />
+	    </fieldset>
+	    <p>
+	    <fieldset>
+			<legend><font color="blue" size="3">Select Start Date/Time</font></legend>
+			<p>
+			<input id="startDate" type="datetime-local" name="startDate" value="2013-02-14" />
+		</fieldset>
+		<p>
+		<fieldset>
+			<legend><font color="blue" size="3">Select End Date/Time</font></legend>
+			<p>
+			<input id="endDate" type="datetime-local" name="endDate" value="2013-02-14" />
+		</fieldset>
+		<p>
+	    <button id="get" type="button" style="margin:30px 50px">Get Availability</button> 
+    </fieldset>
+</form>
+
+<form id="createForm" method="post">
+	<fieldset>
+		<legend><font color="blue" size="4"><b>Create Appointment</b></font></legend>
+		<fieldset>
+			<legend><font color="blue" size="3">Select Appointment Date</font></legend>
+			<p>
+		    <input type="radio" id="radiorow1" name="appointment"  /> <font size="4"> <span id="row1">(appointment will dump here)</span> </font><br />
+		    <p>
+		    <input type="radio" id="radiorow2" name="appointment"  /> <font size="4"> <span id="row2">(appointment will dump here)</span> </font><br />
+		    <p>
+		    <input type="radio" id="radiorow3" name="appointment"  /> <font size="4"> <span id="row3">(appointment will dump here)</span> </font><br />
+		    
+	    </fieldset>
+	    <p>
+	    <button id="create" type="button" style="margin:30px 50px">Create Appointment</button> 
+    </fieldset>
+</form>
+
+<form id="cancelForm" method="post">
+	<fieldset>
+		<legend><font color="blue" size="4"><b>Cancel Appointment</b></font></legend>
+	    <button id="refresh" type="button" style="margin:30px 50px">Refresh Appointments</button>
+	    <p>
+		<fieldset>
+			<legend><font color="blue" size="3">Select Appointments </font></legend>
+			<p>
+		    <input type="radio" id="cancelrow1" name="cancelAppointment"  /> <font size="4"> <span id="cancelSpanRow1">(current events will dump here)</span> </font><br />
+		    <p>
+		    <input type="radio" id="cancelrow2" name="cancelAppointment"  /> <font size="4"> <span id="cancelSpanRow2">(current events will dump here)</span> </font><br />
+		    <p>
+		    <input type="radio" id="cancelrow3" name="cancelAppointment"  /> <font size="4"> <span id="cancelSpanRow3">(current events will dump here)</span> </font><br />
+		    
+		    <button id="cancel" type="button" style="margin:30px 50px">Cancel Appointment</button>
+	    </fieldset>
+    </fieldset>
+</form>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#get").click(function(){
+            var favorite = [];
+            $.each($("input[name='serviceCodes']:checked"), function(){            
+                favorite.push($(this).val());
+            });
+			var serviceCodes = favorite.join(",");
+			
+            var dateString = $("#startDate").val();
+			var startDate = new Date(dateString);
+
+			dateString = $("#endDate").val();
+			var endDate = new Date(dateString);
+			
+            getAvailability(serviceCodes, startDate, endDate);
+        });
+
+        $("#create").click(function(){
+        	var selectedDate = "";
+        	var selected = $("input[type='radio'][name='appointment']:checked");
+        	if (selected.length > 0) {
+        		selectedDate = selected.val();
+        	}
+            
+			var eventId = receivedEvents[selectedDate];
+			var startDate = receivedTime[selectedDate];
+			
+            createAppointment(eventId, startDate);
+        });
+
+        $("#refresh").click(function(){
+            refreshAppointments();
+        });
+
+        $("#cancel").click(function(){
+        	var selectedId = "";
+        	var selected = $("input[type='radio'][name='cancelAppointment']:checked");
+        	if (selected.length > 0) {
+        		selectedId = selected.val();
+        	}
+            
+            cancelAppointment(selectedId);
+        });
+    });
+</script>
+
+<script>
+var sHandle = null;
+var selectedServiceCodes = null;
+
+var Events = function() {};
+var receivedEvents = new Events();
+
+var DateTime = function() {};
+var receivedTime = new DateTime();
+
+function decCallback(value) {
+	console.log("Inside DEC Callback :::: ", value);
+	
+	if(value instanceof DecError) {
+		console.log("ErrorCode ::: " , value.getErrorCode());
+		console.log("ErrorMessage ::: " , value.getErrorMessage());
+	} else if(value instanceof DecSuccess) {
+		console.log("SuccessCode ::: " , value.getSuccessCode());
+		console.log("SuccessMessage ::: " , value.getSuccessMessage());
+
+		subscribe();
+		console.log("Storage after subscribe ::: ", storage);
+		
+	}
+};
+
+function clearStorage() {
+	localStorage.clear();
+}
+
+function resolve(res) {
+   console.log("RESOLVE", res);
+}
+
+function reject(error) {
+   console.log(error);
+}
+
+function subscribe() {
+	sHandle = drive.alertmanager.alerts.subscribe(function callbackSearch(value) {
+		console.log("INSIDE CALLBACK XTIME ALERTS ", value);
+	});
+
+	rHandle = drive.calendar.results.subscribe(function callbackSearch(value) {
+		console.log("INSIDE CALLBACK CALENDAR RESULTS FOR GET AVAILABILITY", value);
+
+		if(value != null && value.length > 0 && value[0].status === "success") {
+			alert("Get Availability Results Success. Please select the appointment for creation !!!");
+			handleAvailableSlots(value);
+		} else {
+			alert("Get Availability Results Failure !!!"); 
+		}
+	}, {"requestId":"get.availability"});
+
+	rHandle = drive.calendar.results.subscribe(function callbackCreate(value) {
+		console.log("INSIDE CALLBACK CALENDAR RESULTS FOR CREATE APPOINTMENT", value);
+
+		if(value != null && value.length > 0 && value[0].status === "success") {
+			alert("Create Appointment Results Success !!!");
+
+			var tmp = "(appointment will dump here)";
+	    	$("#row1").text(tmp);
+	    	$("#radiorow1").val(tmp);
+	    	$("#row2").text(tmp);
+	    	$("#radiorow2").val(tmp);
+	    	$("#row3").text(tmp);
+	    	$("#radiorow3").val(tmp);
+
+	    	receivedEvents = new Events();
+	    	receivedTime = new DateTime();
+	    	
+		} else {
+			alert("Create Appointment Results Failure !!!"); 
+		}
+	}, {"requestId":"set.appointment"});
+
+	rHandle = drive.calendar.results.subscribe(function callbackDelete(value) {
+		console.log("INSIDE CALLBACK CALENDAR RESULTS FOR DELETE APPOINTMENT", value);
+
+		if(value != null && value.length > 0 && value[0].status === "success") {
+			alert("Delete Appointment Results Success!!!");
+
+			var tmp = "(appointment will dump here)";
+	    	$("#cancelSpanRow1").text(tmp);
+	    	$("#cancelrow1").val(tmp);
+	    	$("#cancelSpanRow2").text(tmp);
+	    	$("#cancelrow2").val(tmp);
+	    	$("#cancelSpanRow3").text(tmp);
+	    	$("#cancelrow3").val(tmp);
+	    	
+		} else {
+			alert("Delete Appointment Results Failure !!!"); 
+		}
+	}, {"requestId":"delete.appointment"});
+}
+
+function handleAvailableSlots(value) {
+	//var value1 = [{"events":[{"id":"C7162334-6EEB-4D8B-9E4F-9025970F8C71","startTime":1427355000728},{"id":"0A94505A-F6CB-4C0F-B4D3-49D2AD480E37","startTime":1427355900728},{"id":"60E598E6-DABC-4AFD-B06E-AFE5604AF9D1","startTime":1427356800728}]}];
+	console.log(value[0].events);
+	var events = value[0].events;
+	
+	for (var i = 0; i < events.length; i++) {
+	    console.log("PAIR " + i + ": " + events[i].id);
+	    console.log("PAIR " + i + ": " + new Date(events[i].startTime));
+
+	    receivedEvents[new Date(events[i].startTime)] = events[i].id;
+	    receivedTime[new Date(events[i].startTime)] = events[i].startTime;
+		
+	    if(i==0) {
+	    	$("#row1").text(new Date(events[i].startTime));
+	    	$("#radiorow1").val(new Date(events[i].startTime));
+		} else if(i == 1) {
+	    	$("#row2").text(new Date(events[i].startTime));
+	    	$("#radiorow2").val(new Date(events[i].startTime));
+		} else if(i == 2) {
+	    	$("#row3").text(new Date(events[i].startTime));
+	    	$("#radiorow3").val(new Date(events[i].startTime));
+		} 
+	}
+}
+
+function getAvailability(serviceCodes, startDate, endDate) {
+	selectedServiceCodes = serviceCodes;
+	var date = new Date();
+	var settings = {
+			"requestId":"get.availability",
+		    "action": "get",
+		    "type": "availability",
+		    "startTime": startDate,
+		    "endTime": endDate,
+		    "event": {
+		        "id": "vic_oil_change",
+		        "type": "vehicle_maintenance",
+		        "metas": [
+		            {
+		                "serviceCodes": serviceCodes
+		            }
+		        ]
+		    },
+		    "metas": [
+		        {
+		            "maxItems": 3
+		        }
+		    ]
+		};
+	drive.calendar.requests.set(settings);
+}
+
+function createAppointment(eventId, startDate) {
+	var date = new Date();
+	var settings = {
+			"requestId":"set.appointment",
+		    "action": "set",
+		    "type": "appointment",
+		    "event": {
+		        "id": eventId,
+		        "type": "vehicle_maintenance",
+		        "startTime": startDate,
+		        "metas": [
+		            {
+		                "serviceCodes": selectedServiceCodes
+		            }
+		        ]
+		    },
+		    "metas": [
+		        {
+		            "odometer": 1111111
+		        },
+		        {
+		            "comment": "Create Appointment Req"
+		        }
+		    ]
+		};
+	drive.calendar.requests.set(settings);
+}
+
+function cancelAppointment(eventId) {
+	var settings = {
+			"requestId":"delete.appointment",
+		    "action": "delete",
+		    "type": "appointment",
+		    "event": {
+		        "id": eventId,
+		        "type": "vehicle_maintenance",
+		        "metas": [
+		            {
+		                "serviceCodes": selectedServiceCodes
+		            }
+		        ]
+		    },
+		    "metas": [
+		    ]
+		};
+	drive.calendar.requests.set(settings);
+}
+
+function refreshAppointments() {
+	var rHandle = drive.calendar.current.events.subscribe(function callbackRefresh(events) {
+		drive.calendar.current.events.unsubscribe(rHandle);
+		console.log("INSIDE CALLBACK CALENDAR REFRESH EVENTS ", events);
+
+		if(events != null) {
+			for (var i = 0; i < events.length; i++) {
+			    console.log("PAIR " + i + ": " + events[i].id);
+			    console.log("PAIR " + i + ": " + events[i].location);
+			    
+			    if(i==0) {
+			    	$("#cancelSpanRow1").text(events[i].id);
+			    	$("#cancelrow1").val(events[i].id);
+				} else if(i == 1) {
+			    	$("#cancelSpanRow2").text(events[i].id);
+			    	$("#cancelrow2").val(events[i].id);
+				} else if(i == 2) {
+			    	$("#cancelSpanRow3").text(events[i].id);
+			    	$("#cancelrow3").val(events[i].id);
+				} 
+			}
+		}
+	});
+
+}
+
+function unSubscribe() {
+	drive.settings.calendar.unsubscribe(sHandle);
+}
+
+clearStorage();
+init("XTimeApp", decCallback, ["calendar", "alertmanager"]);
+</script>
+
+
+</body>
+</html>

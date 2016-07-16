@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Site Automation Client</title>
+<script type="text/javascript" src="../lib/dec/json/Sa.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Identity.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Notification.json"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/Properties.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/Promise.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/DECSdk.js"></script>
+<style>
+input {
+  margin-right: 20px;
+  height: 60px;  
+  border-radius: 14px;
+  width: 200px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  background-color: #006699;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div style="float:right;">
+    <input type="button" value="HMI Login" onClick="loginUser()" />
+</div>
+<section>
+	<div style="float: right;">
+        <input type="button" value="Get Devices" onClick="getAllDevices()" />
+		<input type="button" value=">> Shutdown <<" id="unsubscribe" onclick="unSubscribe()" />
+	</div>
+	<div style="margin: 4em;">		
+		<input type="button" value="Open Garage" onclick="openGarageDoor()" />
+		<input type="button" value="Close Garage" onclick="closeGarageDoor()" />	
+	</div>
+	<div style="margin: 4em;">
+		<input type="button" value="Alarm Off" onclick="alarmOff()" />
+		<input type="button" value="Alarm On" onclick="alarmOn()" />			
+	</div>
+	<div style="margin: 4em;">
+		<input type="button" value="Light Off" onclick="lightOff()" />
+		<input type="button" value="Light On" onclick="lightOn()" />			
+	</div>
+	<div style="margin: 4em;">
+		<input type="button" value="Lock Door" onclick="doorLock()" />
+		<input type="button" value="UnLock Door" onclick="doorUnlock()" />			
+	</div>
+       <div style="margin: 4em;">
+		<input type="button" value="Camera ON" onclick="cameraON()" />
+		<input type="button" value="Camera OFF" onclick="cameraOFF()" />
+	</div>
+</section>
+<section>
+<div style="margin: 10px;" id="resultDiv">
+</div>
+</section>
+<script>
+init(function() {},["sa", "identity", "notification"], "digitalLifeApp")
+var sHandle = null;
+var nHandle = null;
+var lHandle = null;
+loginSubscribe();
+saSubscribe();
+getNotifications();
+
+var allDevices = [{"action":"get","type":"resourcetype","id":"","siteIds":["home"]}];
+
+var openGarage = [{"requestId" : "opengarage", "action":"set","type":"resourcetype","id":"garage door","siteIds":["home"],"state":"on"}];
+var closeGarage = [{"requestId" : "closegarage", "action":"set","type":"resourcetype","id":"garage door","siteIds":["home"],"state":"off"}];
+
+var alarmON = [{"action":"set","type":"resourcetype","id":"alarm","siteIds":["home"],"state":"on","metas":[{"alarmMode":"stay"}]}];
+var alarmOFF = [{"action":"set","type":"resourcetype","id":"alarm","siteIds":["home"],"state":"off"}]
+
+var lightOFF = [{"action":"set","type":"resourcetype","id":"light","siteIds":["home"],"state":"off"}];
+var lightON = [{"action":"set","type":"resourcetype","id":"light","siteIds":["home"],"state":"on"}];
+
+var doorLOCK = [{"requestId": "lock", "action":"set","type":"resourcetype","id":"door","siteIds":["home"],"state":"on"}];
+var doorUNLOCK = [{"requestId": "unlock", "action":"set","type":"resourcetype","id":"door","siteIds":["home"],"state":"off"}];
+
+var setCameraOn  = [{"requestId": "setCameraOn", "action":"set","type":"resourcetype","id":"camera","siteIds":["home"],"state":"on"}];
+var setCameraOff = [{"requestId": "setCameraOff", "action":"set","type":"resourcetype","id":"camera","siteIds":["home"],"state":"off"}];
+
+
+function loginUser() {
+    alert("You are allowed to login to HMI");
+    var login = {"login": [{"userId": "LycUGbcDp2W", "pin": "333333"}]};
+    drive.identity.session.set(login); 
+}
+
+function getAllDevices() {
+   drive.sa.requests.set(allDevices);
+}
+
+function openGarageDoor() {
+	drive.sa.requests.set(openGarage);
+}
+
+function closeGarageDoor() {
+	drive.sa.requests.set(closeGarage);
+}
+
+function alarmOn() {
+    drive.sa.requests.set(alarmON);	
+}
+
+function alarmOff() {
+	drive.sa.requests.set(alarmOFF);
+}
+
+function lightOff() {
+	drive.sa.requests.set(lightOFF);
+}
+
+function lightOn() {
+    drive.sa.requests.set(lightON);	
+}
+function doorLock() {
+	drive.sa.requests.set(doorLOCK);
+}
+
+function doorUnlock() {
+    drive.sa.requests.set(doorUNLOCK);	
+}
+
+function cameraON() {
+    drive.sa.requests.set(setCameraOn);
+}
+
+function cameraOFF() {
+    drive.sa.requests.set(setCameraOff);
+}
+
+function loginSubscribe() {
+    lHandle = drive.identity.session.subscribe(loginCallback);
+}
+
+function loginCallback(data) {
+    console.log(":: Login Session calback :: ", data);
+}
+	
+function saSubscribe() {
+    sHandle = drive.sa.results.subscribe(subscribeCallback);
+}
+
+function getNotifications() {
+    nHandle = drive.notification.messages.subscribe(notifyCallback);   
+}
+
+function subscribeCallback(data) {
+	alert("API Success!");
+	console.log("::callback::", data);
+}
+
+function notifyCallback(data) {
+    console.log("DEVICE NOTIFICATION ::::: ", data);
+    alert("You have a notification! Please see console");
+}
+
+function unSubscribe() {
+    drive.sa.results.unsubscribe(sHandle);
+    drive.notification.messages.unsubscribe(nHandle);
+}
+
+</script>
+</body>
+</html>

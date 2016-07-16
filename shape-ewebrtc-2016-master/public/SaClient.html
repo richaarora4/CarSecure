@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Site Automation Client</title>
+<script type="text/javascript" src="../lib/dec/json/Identity.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Sa.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+</head>
+<body>
+<pre>
+<div id="result">
+</div>
+</pre>
+<script>
+//localStorage.clear();
+init(function() {},["identity"], "identity-users")
+
+/* var alarmOptions = {"requestId" : "request-1"};
+var doorOptions  = {"requestId" : "request-2"};
+ */
+//drive.identity.subscribe(identityCallback);
+
+drive.identity.users.subscribe(identityCallback, {"uid" : "ATTDriver49"});
+
+function identityCallback(data) {	
+	console.log(":::::::::: Printing Identity users JSON :::::::::::::");
+	console.log(JSON.stringify(data));
+}
+
+//drive.sa.results.subscribe(subscribeCallback);
+//drive.sa.results.subscribe(door, doorOptions);
+//drive.sa.results.subscribe(light, lightOptions);
+
+var updateRequest = [{"requestId" : "door-update-request", "action":"set","type":"resource","id":"DL00000003","siteIds":["home"],"state":"off"},
+                      {"requestId": "light-update-request", "action":"set","type":"resource","id":"PE00000002","siteIds":["home"],"state":"on"}
+                     ];
+                     
+var getAllDevice = [{"requestId":"get-all","action":"get","type":"resourcetype","id":"","siteIds":["home"]}];
+var getAlarmStatus = [{"requestId":"get-alarm","action":"get","type":"resource","id":"AM00000004","siteIds":["home"]}];
+var getGarageDoorStatus = [{"requestId":"get-garage-door","action":"get","type":"resource","id":"GC05006FAC","siteIds":["home"]}]
+//drive.sa.requests.set(getAllDevice);
+//drive.sa.requests.set(getAlarmStatus);
+//drive.sa.requests.set(getGarageDoorStatus);
+
+//drive.sa.requests.clear();
+
+function resolve(res) {
+    console.log(":: get RESOLVE ::", res);
+}
+
+function reject(rej) {
+    console.log(":: get REJECT ::", rej);
+}
+
+function subscribeCallback(data) {
+	console.log("::callback::", data);
+}
+
+function alarm(data) {
+	console.log("alarm", data);
+} 
+function door(data) {
+	console.log("door", data);
+}
+function light(data) {
+	console.log("light", data);
+}
+//showLocalStorage();
+</script>
+</body>
+</html>

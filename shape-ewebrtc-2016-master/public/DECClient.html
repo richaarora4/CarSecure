@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="../lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Commerce.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Connectivity.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Identity.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Media.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Navigation.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Notification.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Policy.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Sa.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Settings.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Search.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Sms.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Va.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Vehicleinfo.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<!--<script type="text/javascript" src="../lib/dec/js/minified/mbbridge.min.js"></script>-->
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+
+
+<!-- These classes will be used once nFuzion upgrades android version to 4.4 -->
+<!-- script type="text/javascript" src="../js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../js/minified/SpanMessageBroker.min.js"></script> 
+<button type="button" onclick="RunSpanMessageBroker()">Try it</button>
+-->
+
+</head>
+<body>
+<script>
+function decCallback(){
+};
+
+function callbacktestPos(value) {
+	console.log("inside callback function::::::::" + value);
+	showLocalStorage();
+}
+
+function callbacktestLong(value) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("navigation.position.longitude", value);
+	showLocalStorage();
+}
+
+function callbacktestcountry(value) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("navigation.destination.country", value);
+	showLocalStorage();
+}
+
+function callbacktestStreet(value) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("navigation.destination.street", value);
+	showLocalStorage();
+}
+
+function callbacktestMetas(tvalue) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("navigation.destination.metas", value);
+	showLocalStorage();
+}
+
+function callbacktestSMS(tvalue) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("sms.inbox.messages.sender", value);
+	showLocalStorage();
+}
+
+function callbacktestPolicies(tvalue) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("sms.inbox.messages.sender", value);
+	showLocalStorage();
+}
+
+function callbacktestSettings(tvalue) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("settings.system.language", value);
+	showLocalStorage();
+}
+
+function callbackAppInstalled(value) {
+	console.log("inside callback function::::::::");
+	localStorage.setItem("appmanager.apps.installed", value);
+	showLocalStorage();
+}
+
+localStorage.clear();
+init(new decCallback(),["appmanager","commerce","connectivity","identity","media","navigation","notification","policy","sa","settings","search","sms","va","vehicleinfo"]);
+//init(new decCallback(),["navigation"]);
+
+//Subscribe, set, get for appmanager type
+//var appInstalledHandle = drive.appmanager.apps.installed.subscribe(callbackAppInstalled);
+//console.log("Handle Returned: " + appInstalledHandle);
+
+/* var appSettings = {"appId" : "App1", "type" : "GameApp", "version" : "v1", "installed" : true};
+drive.appmanager.apps.set(appSettings).then(logResult, logError);
+ 
+appSettings = {"appId" : "App2", "type" : "EntApp", "version" : "v1", "installed" : true};
+drive.appmanager.apps.set(appSettings).then(logResult, logError); */
+
+/* var options = {"version":"v1"};
+var installedFlag = {"installed" : false};
+drive.appmanager.apps.set(installedFlag, options).then(logResult, logError);*/
+
+//Subscribe, set, get for settings type
+/* var settingsSubscribeHandle = drive.settings.system.language.subscribe(callbacktestSettings);
+console.log("Handle Returned: " + settingsSubscribeHandle);
+
+var settings = {"language" : "en"};
+drive.settings.system.set(settings).then(logResult, logError);
+
+drive.settings.system.get().then(logResult, logError);
+ */
+
+//Subscribe, set, get for navigation type
+/*var posSubscribeHandle = drive.navigation.position.subscribe(callbacktestPos);
+console.log("Handle Returned: " + posSubscribeHandle);
+var poslonSubscribeHandle = drive.navigation.position.longitude.subscribe(callbacktestLong);
+console.log("Handle Returned: " + poslonSubscribeHandle);
+var destcountrySubscribeHandle = drive.navigation.destination.country.subscribe(callbacktestcountry);
+console.log("Handle Returned: " + destcountrySubscribeHandle);
+var deststSubscribeHandle = drive.navigation.destination.street.subscribe(callbacktestStreet);
+console.log("Handle Returned: " + deststSubscribeHandle);
+var destmetasSubscribeHandle = drive.navigation.destination.metas.subscribe(callbacktestMetas);
+console.log("Handle Returned: " + destmetasSubscribeHandle);*/
+
+//var smsInboxSubscribeHandle = drive.sms.inbox.messages.sender.subscribe(callbacktestSMS);
+//console.log("Handle Returned: " + smsInboxSubscribeHandle);
+
+//Available status
+/*var latAvailableStatus = drive.navigation.position.latitude.getAvailableStatus();
+console.log("Latitude Availability - " + latAvailableStatus);
+var streetAvailableStatus = drive.navigation.destination.street.getAvailableStatus();
+console.log("Street Availability - " + streetAvailableStatus);*/
+
+//var smsInboxAvailableStatus = drive.sms.inbox.messages.sender.getAvailableStatus();
+//console.log("SMS Inbox Availability - " + smsInboxAvailableStatus);
+
+//Set
+//var settings = {"latitude":3,"longitude":4};
+//drive.navigation.position.set(settings).then(logResult, logError);
+//var settings = {"country":"India","street":"Chennai"};
+//drive.navigation.destination.set(settings).then(logResult, logError);
+
+//var settings = {"sender":"ATT"};
+//drive.sms.inbox.messages.set(settings).then(logResult, logError);
+
+//showLocalStorage();
+
+//Get
+//drive.navigation.position.latitude.get().then(logResult, logError);
+//drive.navigation.position.get().then(logResult, logError); // get without options
+//drive.navigation.position.get(["latitude","longitude"]).then(logResult, logError); // get with array options
+
+//drive.navigation.destination.get().then(logResult, logError); // get without options
+//drive.navigation.destination.metas.get().then(logResult, logError);
+
+//drive.navigation.get().then(logResult, logError); // get without options
+
+//drive.sms.inbox.messages.get().then(logResult, logError);
+
+//Clear
+//var settings = {"latitude":"+3","longitude":"-4"};
+//drive.navigation.position.clear(settings).then(logResult, logError);
+//var settings = {"sender":"ATT"};
+//drive.sms.inbox.messages.clear(settings).then(logResult, logError);
+
+//Unsubscribe
+//drive.navigation.position.latitude.unsubscribe(poslatSubscribeHandle);
+//drive.sms.inbox.messages.sender.unsubscribe(smsInboxSubscribeHandle);
+
+//Subscribe, set, get for Policy type.
+
+/* var policiesSubscribeHandle = drive.policy.policies.subscribe(callbacktestPolicies);
+console.log("Handle Returned: " + policiesSubscribeHandle); */
+
+/* var policy = {"id":"140","name":"John","type":"safety","enabled":"true"};
+drive.policy.policies.set(policy).then(logResult, logError);
+ 
+policy = {"id":"99","name":"David","type":"safety","enabled":"false"};
+drive.policy.policies.set(policy).then(logResult, logError); */
+
+/* var options = {"type":"safety"};
+var policy = {"enabled" : "true"};
+drive.policy.policies.set(policy, options).then(logResult, logError); */
+
+//var policyType={"id":"140"};
+//drive.policy.policies.get(policyType).then(logResult, logError);
+//drive.policy.policies.get().then(logResult, logError);
+
+showLocalStorage();
+
+
+
+</script>
+</body>
+</html>
+
+

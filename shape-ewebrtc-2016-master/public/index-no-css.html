@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; -->
+
+		<!-- any other head content must come *after* the above tags -->
+    <meta name="description" content="AT&amp;T Symposium 2016 - Enhanced WebRTC Bootstrap Demo">
+    <meta name="author" content="Raj Sesetti, DRT-SDK, CP&amp;TS">
+
+    <link rel="icon" href="https://developer.att.com/static-assets/images/favicon.ico">
+
+		<link rel="stylesheet" href="css/gridism.css">
+		<link rel="stylesheet" href="css/normalize.css">
+		<link rel="stylesheet" href="css/app-gridism.css">
+
+    <title>AT&amp;T Symposium 2016 - Enhanced WebRTC Bootstrap Demo</title>
+	</head>
+
+	<body>
+		<h2>AT&amp;T Symposium 2016</h2>
+		<h3>Enhanced WebRTC Demo</h3>
+
+		<h4>Phone</h4>
+		<div> 
+			<span id='spnStatus'>Waiting for Login...</span>
+		</div>
+		<div> 
+			<input type='text' id='txtCaller' value='' placeholder='Enter an alphanumeric string'>@ <span id='spnAIdDomain'>Loading...</span>
+		</div>
+		<div>
+			<button id='btnLogin' hidden>Login</button>
+			<button id='btnLogout' hidden>Logout</button>
+		</div>
+
+		<h4>Call</h4>
+		<div>
+			<input type='text' id='txtCallee' placeholder='Phone Number or Account ID to Call' hidden>
+			<button id='btnCall' hidden>Call</button>
+			<button id='btnHangup' hidden>Hangup</button>
+		</div>
+		<div>
+			<button id='btnAnswer' hidden>Answer</button>
+		</div>
+		<div>
+			<button id='btnHold' hidden>Hold</button>
+			<button id='btnResume' hidden>Resume</button>
+		</div>
+		<div>
+			<button id='btnMute' hidden>Mute</button>
+			<button id='btnUnmute' hidden>Unmute</button>
+		</div>
+
+		<h4>Media</h4>
+		<video id='vidRemote' width='256' height='256'></video>
+		<video id='vidLocal' width='128' height='128'></video>
+
+		<script type='text/javascript' src='js/ewebrtc-sdk.min.js'></script>   
+		<script type='text/javascript' src='js/accid-check-browser.js'></script>   
+		<script type='text/javascript' src='js/accid-setup-phone.js'></script>   
+		<script type='text/javascript' src='js/accid-make-call.js'></script>   
+		<script type='text/javascript' src='js/accid-answer-call.js'></script>   
+
+	</body>
+
+</html>
+

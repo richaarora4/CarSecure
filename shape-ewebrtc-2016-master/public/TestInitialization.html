@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../lib/dec/json/Sa.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Navigation.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+</head>
+
+<body>
+
+<script>
+
+function decCallback(value) {
+	console.log("Inside DEC Callback :::: ", value);
+	
+	if(value instanceof DecError) {
+		console.log("ErrorCode ::: " , value.getErrorCode());
+		console.log("ErrorMessage ::: " , value.getErrorMessage());
+	} else if(value instanceof DecSuccess) {
+		console.log("SuccessCode ::: " , value.getSuccessCode());
+		console.log("SuccessMessage ::: " , value.getSuccessMessage());
+
+		subscribeNav();
+		subscribePois();
+		setPos();
+		setDest();
+		setPois();
+
+		//delNav();
+		//delPois();
+	}
+};
+
+function clearStorage() {
+	localStorage.clear();
+}
+
+function callbackPois(value) {
+	console.log("inside callback function::::::::", value);
+}
+
+function callbackPoisWithOptionsType(value) {
+	console.log("inside callbackPoisWithOptions Type function::::::::", value);
+
+	if(value instanceof Array) {
+		for (var counter = 0; counter < value.length; counter++) {
+			console.log("Array Item " + counter, value[counter]);
+		}
+	}
+}
+
+function callbackPoisWithOptionsID(value) {
+	console.log("inside callbackPoisWithOptions ID function::::::::", value);
+
+	if(value instanceof Array) {
+		for (var counter = 0; counter < value.length; counter++) {
+			console.log("Array Item " + counter, value[counter]);
+		}
+	}
+}
+
+function callbackPosition(value) {
+	console.log("inside callbackPosition function::::::::", value);
+}
+
+function callbackDest(value) {
+	console.log("inside callbackDest function::::::::", value);
+}
+
+function resolve(res) {
+   console.log("RESOLVE", res);
+}
+
+function reject(error) {
+   console.log(error);
+}
+	
+function subscribePois() {
+	//drive.navigation.pois.subscribe(callbackPois);
+	drive.navigation.pois.subscribe(callbackPoisWithOptionsType, {"type" : "parking"});
+	drive.navigation.pois.subscribe(callbackPoisWithOptionsID, {"id" : "myPOI1"});
+}
+
+function subscribeNav() {
+	drive.navigation.position.subscribe(callbackPosition);
+	drive.navigation.destination.subscribe(callbackDest);
+}
+
+function setPos() {
+	var settings = {"latitude":10, "longitude":11};
+	drive.navigation.position.set(settings).then(resolve, reject);;
+}
+
+function setDest() {
+	var settings = {"id":"ID1", "categories":["App","Games"]};
+	drive.navigation.destination.set(settings).then(resolve, reject);
+}
+
+function setPois() {
+	/* var options = {"id":"myPOI1"};
+	var setpoi = {"type" : "parking"};
+	drive.navigation.pois.set(setpoi, options).then(resolve, reject);
+
+	options = {"id":"myPOI2"};
+	setpoi = {"type" : "parking"};
+	drive.navigation.pois.set(setpoi, options).then(resolve, reject); */
+	
+	var poiCollection = [{
+	    "id": "myPOI1",
+	    "comments": "2",
+	    "street": "2 Glenn Eagle Point",
+	    "postalCode": "30241",
+	    "city": "LaGrange",
+	    "region": "GA1234567",
+	    "country": "USA",
+	    "phone": "706-812-04061",
+	    "latitude": 32.9397660369202,
+	    "longitude": -83.96518993846634,
+	    "symbol": "AirPortIconImage",
+	    "type": "parking",
+	    "visible": true,
+	    "selected": false
+	},
+	{
+	    "id": "myPOI2",
+	    "comments": "2",
+	    "street": "2 Glenn Eagle Point",
+	    "postalCode": "30241",
+	    "city": "LaGrange",
+	    "region": "GA1234567",
+	    "country": "USA",
+	    "phone": "706-812-04061",
+	    "latitude": 32.9397660369202,
+	    "longitude": -83.96518993846634,
+	    "symbol": "AirPortIconImage",
+	    "type": "parking",
+	    "visible": true,
+	    "selected": false
+	}];
+ 
+	drive.navigation.pois.set(poiCollection).then(resolve, reject);
+}
+
+function delNav() {
+	drive.navigation.position.delete();
+	drive.navigation.destination.delete();
+}
+
+function delPois() {
+	/* var settings = {"type":"parking"};
+	drive.navigation.pois.delete(settings); */
+	drive.navigation.delete({"pois":{"type": "parking"}});		
+}
+
+//clearStorage();
+init("sample", decCallback, ["navigation"]);
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+	"name": "shape-2016.herokuapp.com",
+	"version": "1.0.0",
+	"description": "AT&T Shape Sample App using AT&T Enhanced WebRTC JS SDK",
+	"homepage": "https://developer.att.com",
+	"keywords": [
+		"Enhanced WebRTC",
+		"AT&T"
+	],
+	"license": "AT&T",
+	"author": "AT&T Developer Program, DRT/LTA",
+	"private": true,
+	"scripts": {
+		"start": "node app.js"
+	},
+	"engines": {
+		"node": "5.1.*"
+	},
+	"dependencies": {
+		"att-dhs": "2.0.0",
+		"body-parser": "~1.0.0",
+		"express": "~4.2.0",
+		"hjs": "~0.0.6",
+		"static-favicon": "~1.0.0"
+	}
+}
+

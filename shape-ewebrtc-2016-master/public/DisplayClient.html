@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="../lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Commerce.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Connectivity.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Identity.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Media.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Navigation.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Notification.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Policy.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Sa.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Settings.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Search.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Sms.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Va.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Vehicleinfo.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<!--<script type="text/javascript" src="../lib/dec/js/minified/mbbridge.min.js"></script>-->
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+
+
+<!-- These classes will be used once nFuzion upgrades android version to 4.4 -->
+<!-- script type="text/javascript" src="../js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script> 
+<button type="button" onclick="RunSpanMessageBroker()">Try it</button>
+-->
+
+</head>
+<body>
+<script>
+function decCallback(){
+};
+
+function navigationCallback(value) {
+	console.log("inside navigationCallback function::::::::" + value);
+}
+
+function navigationDestinationCallback(value) {
+	console.log("inside navigationDestinationCallback function::::::::" + value);
+}
+function navigationDestinationDisplayCallback(value) {
+	console.log("inside navigationDestinationDisplayCallback function::::::::" + value);
+}
+
+
+localStorage.clear();
+init(new decCallback(),["navigation"]);
+
+//Subscribe, set, get for navigation type
+var navigationHandle = drive.navigation.subscribe(navigationCallback);
+console.log("navigationHandle Returned : " + navigationHandle);
+var navigationDestHandle = drive.navigation.destination.subscribe(navigationDestinationCallback);
+console.log("navigationDestHandle Returned : " + navigationDestHandle);
+var navigationDestDisplayHandle = drive.navigation.destination.display.subscribe(navigationDestinationDisplayCallback);
+console.log("navigationDestDisplayHandle Returned : " + navigationDestDisplayHandle); 
+
+
+
+//Set /* 
+var settings = {"latitude":34.33,"longitude":43.45,"altitude":76.45};
+drive.navigation.destination.display.set(settings).then(logResult, logError);
+
+/* var settings = {"display":{"latitude":34.33,"longitude":43.45,"altitude":76.45}};
+drive.navigation.destination.set(settings).then(logResult, logError); */
+
+/*var settings = {"destination":{"display":{"latitude":34.33,"longitude":43.45,"altitude":76.45}}};
+drive.navigation.set(settings).then(logResult, logError);*/
+
+showLocalStorage();
+
+
+
+</script>
+</body>
+</html>
+
+

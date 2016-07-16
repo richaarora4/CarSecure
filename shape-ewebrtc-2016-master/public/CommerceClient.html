@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>App Commerce Client</title>
+<style>
+</style>
+<script type="text/javascript" src="../lib/dec/json/Commerce.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk-Consolidate.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+
+</head>
+<body>
+<section>
+	<div style="margin-left: 4em;">
+		<div id="info"></div>
+	</div>
+	<div style="margin: 4em;">
+		<input type="text" id="idField" name="idField" placeholder="identifier field" />
+		<input type="button" value="1. apps subscribe" id="appsubscribe" onclick="appSubscribe()" />
+		<input type="button" value="2. commerce subscribe" id="subscribe" onclick="commerceSubscribe()" />
+		<input type="button" value="3. submit request" id="set" onclick="set()" />	
+	</div>
+</section>
+<script>
+var txt = "";
+txt += "<h3><p>Platform: " + navigator.platform + "</p>";
+txt += "<p>User-agent header: " + navigator.userAgent + "</p></h3>";
+document.getElementById("info").innerHTML = txt;
+
+init(function() {},["commerce", "appmanager"], "commerce")
+
+var createOfferRequest = [{"requestId": "request-1", "action":"offer","type":"resource","id":"A-03EGebsSpA6"}]
+var purchaseOfferRequest = [{"requestId": "request-2", "action":"purchase","type":"offer","id":"9838799.PROF"}]
+
+function commerceSubscribe() {
+	alert("coming in subscribe");
+	drive.commerce.results.subscribe(commerceCallback);	
+}
+function set() {
+	alert("coming in set...");
+	drive.commerce.requests.set(purchaseOfferRequest);
+}
+
+function appSubscribe() {
+	drive.appmanager.apps.subscribe(appCallback);
+}
+
+function commerceCallback(response) {
+	console.log("************* Printing Commerce Response *****************");
+	console.log('RESPONSE DATA',response);
+	console.log("........... Finished Commerce callback.........");
+}
+
+function appCallback(response) {
+	console.log("Printing Appmanager response");
+	console.log(response);
+	console.log(".........Finished Appmanager callback.......");	
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../lib/dec/json/Policy.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/Properties.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/SpanMessageBroker.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/Promise.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/DECSdk.js"></script>
+</head>
+
+<body>
+
+<button type="button" onclick="setRequests()">Subscribe Policy</button>
+
+<script>
+var sHandle = null;
+
+function decCallback(value) {
+	console.log("Inside DEC Callback :::: ", value);
+	
+	if(value instanceof DecError) {
+		console.log("ErrorCode ::: " , value.getErrorCode());
+		console.log("ErrorMessage ::: " , value.getErrorMessage());
+	} else if(value instanceof DecSuccess) {
+		console.log("SuccessCode ::: " , value.getSuccessCode());
+		console.log("SuccessMessage ::: " , value.getSuccessMessage());
+		subscribeSearchResults();
+		
+	}
+};
+
+function clearStorage() {
+	localStorage.clear();
+}
+
+function resolve(res) {
+   console.log("RESOLVE", res);
+}
+
+function reject(error) {
+   console.log(error);
+}
+
+function setRequests() {
+	sHandle = drive.policy.resources.subscribe(function callbackSearch(value) {
+		console.log("INSIDE CALLBACK Policy resources ", value);
+	},{"type":"media"});	
+}
+
+init("Policy test client", decCallback, ["policy"]);
+
+</script>
+</body>
+</html>

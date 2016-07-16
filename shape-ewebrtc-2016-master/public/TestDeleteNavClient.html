@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../lib/dec/json/Navigation.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+</head>
+
+<body>
+
+<script>
+
+function decCallback(){
+};
+
+function clearStorage() {
+	localStorage.clear();
+}
+
+init("sample", new decCallback(),["navigation"]);
+
+function resolve(res) {
+   console.log("RESOLVE", res);
+}
+
+function reject(error) {
+   console.log(error);
+}
+
+function testCallback(results, eventType) {
+   console.log('Value is ', results);
+   console.log('Event Type ' + eventType);
+}
+
+function subscribe() {
+    drive.navigation.subscribe(testCallback);
+    drive.navigation.position.subscribe(testCallback);
+}
+
+function setNav() {
+	var settings = {"latitude":10, "longitude":11};
+	drive.navigation.position.set(settings).then(resolve, reject);;
+
+	settings = {"id":"ID1", "categories":["App","Games"]};
+	drive.navigation.destination.set(settings).then(resolve, reject);;	
+}
+
+function setPois() {
+	var poiCollection = {
+	    "id": "myPOI1",
+	    "comments": "2",
+	    "street": "2 Glenn Eagle Point",
+	    "postalCode": "30241",
+	    "city": "LaGrange",
+	    "region": "GA1234567",
+	    "country": "USA",
+	    "phone": "706-812-04061",
+	    "latitude": 32.9397660369202,
+	    "longitude": -83.96518993846634,
+	    "symbol": "AirPortIconImage",
+	    "type": "address",
+	    "visible": true,
+	    "selected": false
+	};
+
+	drive.navigation.pois.set(poiCollection).then(resolve, reject);
+	
+	poiCollection = {
+		    "id": "myPOI2",
+		    "comments": "2",
+		    "street": "2 Glenn Eagle Point",
+		    "postalCode": "30241",
+		    "city": "LaGrange",
+		    "region": "GA1234567",
+		    "country": "Canada",
+		    "phone": "706-812-04061",
+		    "latitude": 32.9397660369202,
+		    "longitude": -83.96518993846634,
+		    "symbol": "AirPortIconImage",
+		    "type": "address",
+		    "visible": true,
+		    "selected": false
+		};
+	
+	drive.navigation.pois.set(poiCollection).then(resolve, reject);
+			
+}
+
+function getNav() {
+	drive.navigation.position.get().then(resolve, reject);
+	drive.navigation.destination.get().then(resolve, reject);
+	drive.navigation.get().then(resolve, reject);
+}
+
+function delNav() {
+	drive.navigation.position.delete();
+}
+
+function delPois() {
+	var settings = {"type":"address"};
+	drive.navigation.pois.delete(settings);
+	//drive.navigation.delete({"pois":{"country": "Canada"}});		
+}
+
+//clearStorage();
+subscribe();
+//setNav();
+//setPois();
+
+getNav();
+
+//delNav();
+//delPois();
+
+showLocalStorage();
+
+</script>
+
+
+</body>
+</html>

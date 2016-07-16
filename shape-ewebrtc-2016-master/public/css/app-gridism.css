@@ -1,0 +1,222 @@
+/*
+ * Gridism demonstration page
+ * These styles are all just for the Gridism demo page.
+ * You don’t need this styleshee in your project.
+ */
+
+
+/* General */
+
+body {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #009fdb; /* shape-blue */
+  background: #000000; /* black */
+  line-height: 20%;
+}
+
+
+/* I use full-width horizontal sections a lot */
+
+body > header,
+body > section,
+body > footer {
+  display: block;
+  width: 100%;
+  clear: both;
+  float: left;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -.05em;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+a {
+  color: #c00;
+  text-decoration: none;
+  border-bottom: 1px solid #eee;
+  -webkit-transition: all .2s ease-in-out;
+  -moz-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+}
+
+header,
+section {
+  border-bottom: 1px solid #eee;
+}
+
+header,
+section,
+footer {
+  border-top: 1px solid #fff;
+}
+
+section,
+footer {
+  padding: 30px 0;
+}
+
+header h1 a {
+  color: #333;
+  border-bottom: none;
+}
+
+header p {
+  margin: 1em 0;
+}
+
+.lead {
+  font-size: 1.5em;
+}
+
+p,
+pre {
+  font-size: 1.2em;
+  line-height: 1.8em;
+}
+
+.button {
+  background-color: #000; /* black */
+  border: 3px solid #009fdb;  /* shape-blue */
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 5px 0 0;
+}
+
+.button:hover,
+.button:focus {
+  outline: none;
+  background-color: #009fdb; /* shape-blue */
+}
+
+footer p {
+  margin: 0;
+  font-size: 1em;
+}
+
+span.info {
+  color: green;
+  font-weight: bold;
+}
+
+span.error {
+  color: red;
+  font-weight: bold;
+}
+
+*[hidden] {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  h1 {
+    font-size: 5em;
+  }
+  h2 {
+    font-size: 2.6em;
+  }
+  h3 {
+    font-size: 2em;
+  }
+  .lead {
+    font-size: 1.8em;
+  }
+}
+
+
+/* Styles to help demonstrate the grid */
+
+code,
+pre {
+  font-family: "Source Code Pro", Consolas, Menlo, Monaco, monospace;
+  background: #F1E3D5;
+  color: #333;
+  padding: 3px;
+  border-radius: 5px;
+}
+
+pre {
+  padding: 10px;
+  text-align: center;
+}
+
+.demo p {
+  margin: 0;
+}
+
+.demo .unit pre {
+  margin: 0;
+  padding: 20px 0;
+  -webkit-transition: all .2s ease-in-out;
+  -moz-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+}
+
+.demo .unit pre:hover {
+  background: #fc0;
+}
+
+.grid,
+.unit {
+  -webkit-transition: all .25s ease-in-out;
+  -moz-transition: all .25s ease-in-out;
+  transition: all .25s ease-in-out;
+}
+
+.demo .unit .grid {
+  overflow: hidden;
+  background: rgba(241, 227, 213, .5);
+}
+
+.demo .unit .grid:first-child {
+  border-radius: 5px 5px 0 0;
+}
+
+.demo .unit .grid:last-child {
+  border-radius: 0 0 5px 5px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: solid 1px #009fdb; /* shape-blue */
+  -webkit-transition: box-shadow 0.3s, border 0.3s;
+  -moz-transition: box-shadow 0.3s, border 0.3s;
+  -o-transition: box-shadow 0.3s, border 0.3s;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+
+input[type="text"]:focus, .style-1 input[type="text"].focus {
+  border: solid 1px #707070;
+  -webkit-box-shadow: 0 0 5px 1px #009fdb; /* shape-blue */
+  -moz-box-shadow: 0 0 5px 1px #009fdb; /* shape-blue */
+  box-shadow: 0 0 5px 1px #009fdb; /* shape-blue */
+}
+
+.fixed {
+  position: fixed;
+}
+
+.bottom {
+  right: 30px;
+  bottom: 30px;
+}

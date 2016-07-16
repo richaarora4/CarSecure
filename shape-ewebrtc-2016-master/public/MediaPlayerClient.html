@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<script type="text/javascript" src="../lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Identity.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Media.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Navigation.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Notification.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Policy.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Settings.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Search.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Sms.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Va.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Vehicleinfo.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<!--<script type="text/javascript" src="../lib/dec/js/minified/mbbridge.min.js"></script>-->
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+
+
+<!-- These classes will be used once nFuzion upgrades android version to 4.4 -->
+<!-- script type="text/javascript" src="../js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script> 
+<button type="button" onclick="RunSpanMessageBroker()">Try it</button>
+-->
+
+</head>
+<body>
+<script>
+function decCallback(){
+};
+
+function callbackPolicyResources(value) {
+	console.log("inside call back function:::");
+	localStorage.setItem("policy.resources", value);
+	showLocalStorage();
+}
+
+function callbackMedia(value) {
+	console.log("inside call back function:::");
+	localStorage.setItem("media", value);
+	showLocalStorage();
+}
+
+//localStorage.clear();
+init(new decCallback(),["policy"]);
+
+var options =  {"name":"mediaplayer"};
+drive.policy.resources.subscribe(callbackPolicyResources, options);
+
+var mediaSettings = {"access" : {"appId":"JSApp", "exclusive":true}};
+drive.policy.resources.set(mediaSettings, options);
+
+drive.media.subscribe(mediaCallback);
+
+var currentMedia = {"source":"play1.wmv", "position":1000};
+drive.media.currentMedia.set(currentMedia);
+drive.media.player.set({"action":"play"});
+
+showLocalStorage();
+</script>
+</body>
+</html>
+
+

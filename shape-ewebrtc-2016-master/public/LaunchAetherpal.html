@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Launch Aetherpal</title>
+<script type="text/javascript" src="https://garagesvservices.ericy.com/hwadecjssdk-1/lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="https://garagesvservices.ericy.com/hwadecjssdk-1/lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="https://garagesvservices.ericy.com/hwadecjssdk-1/lib/dec/js/minified/DECSdk.min.js"></script>
+</head>
+<body>
+<script>
+localStorage.clear();
+init(function() {},["appmanager"], "Launch-Aetherpal");
+var handle = drive.appmanager.apps.subscribe(callback, {"type": "android"});
+
+function callback(data) {
+	drive.appmanager.apps.unsubscribe(handle);
+	console.log(":::::: callback :::::");
+	console.log(data);
+	var appList = [];
+	for(var i=0; i < data.length; i++) {
+		var app = data[i];
+		var appMetas = data[i].metas;
+		for(var j=0; j < appMetas.length; j++) {
+			var eachMeta = appMetas[j];
+			if (eachMeta.packageName == "net.aetherpal.device") {
+				// Got the Atherpal App 
+				console.log("You found the Aetherpal app");
+				app.started = true;				
+				appList.push(app);
+			}
+		} 		
+	}	
+	if (appList.length>0) {
+	    appManagerSet(appList);
+	}
+}
+function appManagerSet(appList) {
+	console.log(".....Setting Apps....");
+	drive.appmanager.apps.set(appList);
+}
+</script>
+</body>
+</html>

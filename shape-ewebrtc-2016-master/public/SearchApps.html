@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../lib/dec/json/Search.json"></script>
+<script type="text/javascript" src="../lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/Properties.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/SpanMessageBroker.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/Promise.js"></script>
+<script type="text/javascript" src="../lib/dec/js/normal/DECSdk.js"></script>
+</head>
+
+<body>
+
+<button type="button" onclick="setRequests()">App Search</button>
+
+<script>
+var sHandle = null;
+
+function decCallback(value) {
+	console.log("Inside DEC Callback :::: ", value);
+	
+	if(value instanceof DecError) {
+		console.log("ErrorCode ::: " , value.getErrorCode());
+		console.log("ErrorMessage ::: " , value.getErrorMessage());
+	} else if(value instanceof DecSuccess) {
+		console.log("SuccessCode ::: " , value.getSuccessCode());
+		console.log("SuccessMessage ::: " , value.getSuccessMessage());
+		subscribeSearchResults();
+		
+	}
+};
+
+function clearStorage() {
+	localStorage.clear();
+}
+
+function resolve(res) {
+   console.log("RESOLVE", res);
+}
+
+function reject(error) {
+   console.log(error);
+}
+
+function setRequests() {
+	var appId = "A-3c8blt8e0V1";
+	var requestId = "App:seach";
+	var queryString = "ownerAssetId : "+appId;
+	var settings = {"contentType":"html5app","query":queryString,"requestId":requestId,"serviceType":"app"};
+	drive.search.requests.set(settings);	
+}
+
+function subscribeSearchResults() {
+	var searchFilter = {"requestId":"App:seach"};
+	var appId = "A-3c8blt8e0V1";
+	sHandle = drive.search.results.subscribe(function callbackSearch(value) {
+		console.log("INSIDE CALLBACK SEARCH Results ", value);
+		if(value!= null) {
+			var items = value.items;
+			console.log("ITEMS ", items);
+			if(items!= null && items.length>0) {
+				var item = items[0]; 
+				console.log("ITEM ", item);
+				if(item!= null) {
+					var apps = item.app;
+					apps.installed = true;
+					console.log("apps ", apps);
+					var appList = [apps];
+					console.log("appList ", appList);
+					var appSettings = {"appId":appId};
+					drive.appmanager.apps.set(appList,appSettings);
+				}
+			}
+		}
+	},searchFilter);
+}
+
+init("AppSearch", decCallback, ["search","appmanager"]);
+
+</script>
+</body>
+</html>

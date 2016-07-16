@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<script type="text/javascript" src="../lib/dec/json/Navigation.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+	
+</head>
+<body>
+
+<script>
+function decCallback(){
+};
+
+function callbacktest(attrVal) {
+	console.log("inside callback function::::::::" + attrVal);
+}
+
+localStorage.clear();
+
+init(new decCallback(),["navigation"]);
+
+drive.navigation.subscribe(callbacktest);
+
+var poiCollection = [{
+    "id": "myPOI1",
+    "comments": "1",
+    "street": "1 Glenn Eagle Point",
+    "postalCode": "30241",
+    "city": "LaGrange",
+    "region": "GA1234567",
+    "country": "USA",
+    "phone": "706-812-0406",
+    "latitude": 32.9397660369202,
+    "longitude": -83.96518993846634,
+    "symbol": "AirPortIcon",
+    "type": "address",
+    "visible": true,
+    "selected": false
+}];
+
+drive.navigation.set({"pois":{"value":poiCollection}}).then(this.resolve, this.reject);
+
+showLocalStorage();
+
+
+
+</script>
+</body>
+</html>
+
+

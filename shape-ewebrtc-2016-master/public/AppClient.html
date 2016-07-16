@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<script type="text/javascript" src="../lib/dec/json/Appmanager.json"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Properties.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/SpanMessageBroker.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/Promise.min.js"></script>
+<script type="text/javascript" src="../lib/dec/js/minified/DECSdk.min.js"></script>
+	
+</head>
+<body>
+
+<script>
+
+function decCallback(){
+};
+
+//localStorage.clear();
+
+init(new decCallback(),["appmanager"]);
+
+function resolve(res) {
+   ///success
+   console.log("RESOLVE", res);
+}
+
+function reject(error) {
+   console.log(error);
+}
+
+function appsList(results, eventType) {
+   console.log('Apps LIST', results);
+   console.log('Event Type', eventType);
+}
+
+function subscribe() {
+    drive.appmanager.apps.subscribe(appsList);
+}
+
+function getApps() {
+	app.appId = "myid4";
+	app.serviceId = "serviceId4";
+	app.metas = [{
+		"imageUrl":"imageUrlNew http"
+	}];	
+	
+	app.purchaseId = "purchaseId4";
+	
+	setApps(app);
+}
+
+function setApps(app) {
+	var appId = app.appId;
+	var serviceId = app.serviceId;
+	var metas = app.metas;
+	var purchaseId = app.purchaseId;
+
+    var appSettings = {"appId":appId, "serviceId":serviceId, "installed":true, "metas":metas, "purchase":{"purchaseId":purchaseId}};
+	drive.appmanager.apps.set(appSettings).then(resolve, reject);
+	
+}
+
+function setwithoptions() {
+	var options = {"appId":"myid4"};
+	var appSettings = {"installed" : false};
+	drive.appmanager.apps.set(appSettings, options);
+}
+
+var App = function() {
+};
+
+var app = new App();
+
+subscribe();
+
+getApps();
+
+//setwithoptions();
+
+showLocalStorage();
+
+
+</script>
+</body>
+</html>
+
+
